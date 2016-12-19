@@ -1,0 +1,9 @@
+{
+  "description": "Parse special features from hipchat messages",
+  "handler": "lambda.MessageParser::handleRequest",
+  "runtime": "java",
+  "hooks": {
+    "build": "mvn package",
+    "clean": "mvn clean"
+  }
+}
