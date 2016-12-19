@@ -2,6 +2,11 @@ package lambda;
 
 import java.util.Map;
 
+/**
+ * LambdaProxyResponse represents an https response that has been proxied from AWS Lambda through the APIGateway.
+ */
+
+
 public class LambdaProxyResponse {
     private Integer statusCode;
     private Map<String, String> headers;

@@ -3,6 +3,7 @@ package lambda.model;
 import java.util.List;
 
 /**
+ * HipChatMessageResponse is a POJO model object for gson
  */
 public class HipChatMessageResponse {
     private List<String> mentions;

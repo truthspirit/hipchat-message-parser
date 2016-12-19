@@ -2,6 +2,11 @@ package lambda;
 
 import java.util.Map;
 
+/**
+ * LambdaProxyRequest and it's helper classes represent an https request that has been proxied to AWS Lambda
+ * through the APIGateway. This class is populated automatically by the lambda framework.
+ */
+
 public class LambdaProxyRequest {
     private String message;
     private Input input;

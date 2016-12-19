@@ -1,11 +1,27 @@
 package lambda.model;
 
-/**
- */
-public class HipChatMessageLink {
-    private String url;
-    private String title;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
+import com.google.gson.annotations.Expose;
 
+import java.time.LocalDateTime;
+
+/**
+ * HipChatMessageLink is both a DynamoDB mapped table and a gson annotated model object.
+ */
+
+@DynamoDBTable(tableName = "linkCache")
+public class HipChatMessageLink {
+    @Expose
+    private String url;
+    @Expose
+    private String title;
+    private LocalDateTime created;
+    private Integer ttl;
+
+    @DynamoDBHashKey
     public String getUrl() {
         return url;
     }
@@ -22,6 +38,22 @@ public class HipChatMessageLink {
         this.title = title;
     }
 
+    @DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public Integer getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Integer ttl) {
+        this.ttl = ttl;
+    }
 
     public HipChatMessageLink url(String url) {
         this.url = url;
@@ -33,6 +65,16 @@ public class HipChatMessageLink {
         return this;
     }
 
+    public HipChatMessageLink created(LocalDateTime created) {
+        this.created = created;
+        return this;
+    }
+
+    public HipChatMessageLink ttl(Integer ttl) {
+        this.ttl = ttl;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,13 +83,17 @@ public class HipChatMessageLink {
         HipChatMessageLink that = (HipChatMessageLink) o;
 
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        return title != null ? title.equals(that.title) : that.title == null;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (created != null ? !created.equals(that.created) : that.created != null) return false;
+        return ttl != null ? ttl.equals(that.ttl) : that.ttl == null;
     }
 
     @Override
     public int hashCode() {
         int result = url != null ? url.hashCode() : 0;
         result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + (ttl != null ? ttl.hashCode() : 0);
         return result;
     }
 
@@ -56,6 +102,20 @@ public class HipChatMessageLink {
         return "HipChatMessageLink{" +
                 "url='" + url + '\'' +
                 ", title='" + title + '\'' +
+                ", created=" + created +
+                ", ttl=" + ttl +
                 '}';
+    }
+
+    public static class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
+        @Override
+        public String convert(LocalDateTime time) {
+            return time.toString();
+        }
+
+        @Override
+        public LocalDateTime unconvert(String stringVal) {
+            return LocalDateTime.parse(stringVal);
+        }
     }
 }
