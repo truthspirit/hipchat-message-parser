@@ -13,5 +13,7 @@ A microservice for parsing special features out of hipchat messages.
 
 # Future improvements
 1 - Put an elasticache in front of the apigateway for performance.
+
 2 - Lambda-based integration testing. There are test harness and https invoker blueprints in AWS lambda that makes this easy.
+
 3 - Rewrite in golang.
