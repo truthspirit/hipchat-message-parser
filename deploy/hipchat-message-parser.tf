@@ -1,6 +1,6 @@
-variable "account_id" {default = "712860712183"}
-variable "access_key" {default = "***REMOVED***"}
-variable "secret_key" {default = "***REMOVED***"}
+variable "account_id" {default = ""}
+variable "access_key" {default = ""}
+variable "secret_key" {default = ""}
 variable "region" {default = "us-east-1"}
 
 provider "aws" {
