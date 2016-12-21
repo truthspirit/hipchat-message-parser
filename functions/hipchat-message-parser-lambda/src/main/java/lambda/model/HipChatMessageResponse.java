@@ -1,13 +1,18 @@
 package lambda.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 /**
  * HipChatMessageResponse is a POJO model object for gson
  */
 public class HipChatMessageResponse {
+    @Expose
     private List<String> mentions;
+    @Expose
     private List<String> emoticons;
+    @Expose
     private List<HipChatMessageLink> links;
 
     public List<String> getMentions() {

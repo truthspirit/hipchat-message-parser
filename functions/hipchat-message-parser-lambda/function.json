@@ -1,7 +1,10 @@
 {
+  "name": "lambda",
   "description": "Parse special features from hipchat messages",
-  "handler": "lambda.MessageParser::handleRequest",
+  "handler": "lambda.HipChatMessageHandler::handleRequest",
   "runtime": "java",
+  "region": "us-east-1",
+  "profile": "default",
   "hooks": {
     "build": "mvn package",
     "clean": "mvn clean"

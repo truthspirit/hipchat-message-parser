@@ -1,1 +1,7 @@
 *.java
+/maven-status
+/surefire
+/test-classes
+/generated-sources
+/generated-test-sources
+/classes

@@ -8,7 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lambda.model.HipChatMessageLink;
 import lambda.model.HipChatMessageResponse;
 import lambda.model.ParsedUrl;
@@ -85,24 +85,26 @@ public class HipChatMessageHandler implements RequestHandler<LambdaProxyRequest,
     }
 
     public LambdaProxyResponse handleRequest(LambdaProxyRequest lambdaProxyRequest, Context context) {
+        LOG.info(lambdaProxyRequest);
+        System.out.println(lambdaProxyRequest);
         //ensure method type is POST
-        if(!lambdaProxyRequest.getInput().getHttpMethod().equalsIgnoreCase("post")) {
+        if(!lambdaProxyRequest.getHttpMethod().equalsIgnoreCase("post")) {
             return new LambdaProxyResponse().statusCode(METHOD_NOT_ALLOWED);
         }
         //ensure content type is application/json
-        if(!lambdaProxyRequest.getInput().getHeaders().getContentType().equalsIgnoreCase("application/json")) {
+        if(!lambdaProxyRequest.getHeaders().get("Content-Type").equalsIgnoreCase("text/plain")) {
             return new LambdaProxyResponse().statusCode(UNSUPPORTED_MEDIA_TYPE);
         }
 
-        String message = lambdaProxyRequest.getMessage();
-        if(Strings.isNullOrEmpty(message)) {
+        String body = lambdaProxyRequest.getBody();
+        if(Strings.isNullOrEmpty(body)) {
             return new LambdaProxyResponse().statusCode(OK);
         }
 
         //parse the message for special features
-        List<String> mentions = parseMentions(message);
-        List<String> emoticons = parseEmoticons(message);
-        List<HipChatMessageLink> links = parseLinks(message);
+        List<String> mentions = parseMentions(body);
+        List<String> emoticons = parseEmoticons(body);
+        List<HipChatMessageLink> links = parseLinks(body);
 
         //build a response for the message containing the parsed features
         HipChatMessageResponse response = new HipChatMessageResponse();
@@ -117,7 +119,7 @@ public class HipChatMessageHandler implements RequestHandler<LambdaProxyRequest,
         }
 
         //map the response to json and return 200 - OK
-        return new LambdaProxyResponse().statusCode(OK).body(new Gson().toJson(response));
+        return new LambdaProxyResponse().statusCode(OK).body(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(response));
     }
 
     private List<String> parseMentions(String message) {

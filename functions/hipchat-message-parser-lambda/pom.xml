@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <jar.finalName>hipchat-message-parser-lambda-${project.version}</jar.finalName>
+        <jar.finalName>apex</jar.finalName>
     </properties>
 
     <dependencies>

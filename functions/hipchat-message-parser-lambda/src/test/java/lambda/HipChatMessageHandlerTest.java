@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import lambda.model.HipChatMessageLink;
 import lambda.model.HipChatMessageResponse;
@@ -21,6 +22,10 @@ public class HipChatMessageHandlerTest {
 
     @BeforeClass
     void resetCache() throws InterruptedException {
+        if(System.getProperty("clearCache") == null) {
+            return;
+        }
+
         DynamoDB dynamo = new DynamoDB(new AmazonDynamoDBClient());
         Table linkCache = dynamo.getTable("testLinkCache");
         try {
@@ -93,7 +98,7 @@ public class HipChatMessageHandlerTest {
     private void testFeature(String message, HipChatMessageResponse expected) throws JSONException {
         HipChatMessageHandler handler = new HipChatMessageHandler("testLinkCache");
 
-        LambdaProxyRequest request = new LambdaProxyRequest().message(message).input(new Input().httpMethod("POST").headers(new Headers().contentType("application/json")));
+        LambdaProxyRequest request = new LambdaProxyRequest().body(message).httpMethod("POST").headers(ImmutableMap.of("Content-Type", "text/plain"));
         LambdaProxyResponse response = handler.handleRequest(request, null);
 
         Gson gson = new Gson();

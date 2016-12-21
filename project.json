@@ -1,0 +1,6 @@
+{
+  "name": "hipchat-message-parser",
+  "description": "A lambda function for parsing special features out of hipchat messages.",
+  "role": "arn:aws:iam::712860712183:role/ApexLambdaDeployRole",
+  "region": "us-east-1"
+}
