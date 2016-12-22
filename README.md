@@ -1,6 +1,39 @@
 # hipchat-message-parser
 A microservice for parsing special features out of hipchat messages.
 
+# Installation
+1. Install prerequisite tools: maven, apex and terraform.
+2. Set up an AWS account.
+3. Navigate to the project's /deploy directory.
+4. Give install.sh execute permission.
+5. Run install.sh.
+6. There should now be a Lambda function, an APIGateway a DynamoDB table and an IAM role created and orchestrated to run the message parser.
+
+# Usage
+* The REST API consists of a single POST endpoint at message/parse. 
+* The Content-Type must be 'text/plain'.
+* The message to parse should be the body of the HTTP request.
+* The API takes a string and returns a JSON representation of the emoticons, mentions and links found in the string:
+
+input
+```
+"Hey @alice and @bob! Do you use www.google.com as your main search engine (parrot) (awesome)?"
+```
+
+output
+```
+{
+  "mentions" : [ "alice", "bob" ],
+  "emoticons" : [ "awesome", "parrot" ],
+  "links" : [
+    { 
+      "url" : "www.google.com", 
+      "title" : "Google"
+    }
+  ]
+}
+```
+
 # Design Decision Log
 1 - 2016.12.20 - Picked an AWS cloud implementation using API Gateway and Lambda, the other contender was Dropwizard deployed on AWS EC2 instances. This service seems better suited as a microservice, so Lambda won.
 
